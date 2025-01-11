@@ -145,8 +145,9 @@ export const pricingOptions = [
       "Private board sharing",
       "Unlimited Storage",
       "High-Performance Network",
-      "Marketplace Access",
       "Customizable Analytics",
+      "Private Mode",
+      "Marketplace Access",
     ],
   },
 ];
