@@ -28,7 +28,7 @@ const Contact = () => {
 
   return (
     <section id="contact">
-      <div className="p-10 mt-12 border border-neutral-700 rounded-xl">
+      <div className="p-10 mt-12 mx-auto border border-neutral-700 rounded-xl">
         <h2 className="text-3xl sm:text-5xl lg:text-6xl text-center my-8 tracking-wide">
           Send Us Your Query
         </h2>
