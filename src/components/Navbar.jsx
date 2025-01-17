@@ -50,12 +50,11 @@ const Navbar = () => {
               ))}
             </ul>
             <div className="flex space-x-6">
-              <a
-                href="#"
+              <Link smooth to="#contact"
                 className="py-2 px-3 mt-2 rounded-md bg-gradient-to-r from-purple-500 to-purple-900"
               >
                 Contact us
-              </a>
+              </Link>
             </div>
           </div>
         )}
