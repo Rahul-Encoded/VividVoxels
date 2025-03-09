@@ -1,27 +1,59 @@
 import React, { useState } from "react";
 import { Mail } from "lucide-react";
+const contactEmail = process.env.REACT_APP_CONTACT_EMAIL;
+
 
 const Contact = () => {
+  // State to manage form data
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    contactNumber: "",
     emailAddress: "",
     purpose: "",
     message: "",
   });
 
+  // Handles changes to input fields and updates state
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const isFormValid = Object.values(formData).every((field) => field.trim() !== "");
+  // Validates email address format
+  const isEmailValid = (email) => /\S+@\S+\.\S+/.test(email);
 
-  const handleSubmit = (e) => {
+  // Checks if all fields are filled and email is valid
+  const isFormValid =
+    Object.values(formData).every((field) => field.trim() !== "") &&
+    isEmailValid(formData.emailAddress);
+
+  // Handles form submission and sends an email with form data
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
-    alert("Your query has been sent!");
+
+    try {
+      const response = await fetch("https://api.emailservice.com/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: contactEmail,
+          subject: `New Contact Form Submission from ${formData.firstName} ${formData.lastName}`,
+          text: `Name: ${formData.firstName} ${formData.lastName}\nEmail: ${formData.emailAddress}\nPurpose: ${formData.purpose}\nMessage: ${formData.message}`,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Your query has been sent!");
+        setFormData({ firstName: "", lastName: "", emailAddress: "", purpose: "", message: "" });
+      } else {
+        alert("Failed to send your query. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("An error occurred. Please try again later.");
+    }
   };
 
   return (
@@ -41,17 +73,15 @@ const Contact = () => {
                   name={key}
                   value={formData[key]}
                   onChange={handleChange}
-                  placeholder={`Enter your ${key}`}
                   className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500"
                   rows="4"
                 ></textarea>
               ) : (
                 <input
-                  type={key === "emailAddress" ? "email" : key === "contactNumber" ? "tel" : "text"}
+                  type={key === "emailAddress" ? "email" : "text"}
                   name={key}
                   value={formData[key]}
                   onChange={handleChange}
-                  placeholder={`Enter your ${key}`}
                   className="w-full mt-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500"
                 />
               )}
